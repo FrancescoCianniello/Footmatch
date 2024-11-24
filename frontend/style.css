@@ -1,0 +1,184 @@
+/*Body style*/
+body{
+    font-family:sans-serif;
+    font-size: 20px;
+    background-image: url("https://believeperform.com/wp-content/uploads/2013/05/Fotolia_56534766_Subscription_Monthly_XXL.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    text-align: center;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*Main container*/
+.container {
+    display: inline-block;
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    min-height:100px;
+}
+
+/*Moving logo*/
+.logo{
+    position: absolute;
+    top: 50%;
+    right: 80px;
+    transform: translateY(-50%);
+    width: 150px;
+    height: auto;
+    animation: bounce 1s ease-in-out infinite;
+}
+@keyframes bounce{
+    0% {
+        transform: translateY(0); /*Initial position*/
+    }
+    25% {
+        transform: translateY(-40px); /*Move upwards*/
+    }
+    50% {
+        transform: translateY(0); /*Back to the starting position*/
+    }
+    75% {
+        transform: translateY(40px); /*Move downwards*/
+    }
+    100% {
+        transform: translateY(0); /*Back to the starting position*/
+    }
+}
+
+/*Main page background*/
+body.webapp{
+    background-image: url("https://th.bing.com/th/id/OIP.jMaLxiLFcTtEtQf8v0ry0QHaEK?rs=1&pid=ImgDetMain");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/*Inserting the logo*/
+.img-webapp{
+        position: absolute;
+        top: 10px;
+        left: 50px;
+        width: 100px;
+        height: auto;
+        justify-content: center;
+        z-index: 10;
+    }
+
+/*Creating the toolbar*/
+.toolbar{
+    position: fixed;
+    display: flex;
+    padding: 10px 20px;
+    background-color: antiquewhite;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height:10%;
+    top:0;
+   justify-content: space-between;
+    align-items: center;
+}
+
+h1{
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    font-size: 25px;
+    font-weight: bold;
+    color: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/*Icon placement*/
+.icons-sx{
+    display: flex;
+    justify-content: center;
+    gap:30px;
+    margin-left:200px;
+}
+
+.icons-dx{
+    display: flex;
+    justify-content: center;
+    gap:30px;
+    margin-right:200px;
+}
+
+.icon{
+    width: 50px;
+    height: 50px;
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.icon:hover{
+    filter: brightness(2.0);
+    transform: scale(1.2);
+}
+
+/*Background for the choose-competition section*/
+body.choose-competition{
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+    background-image: url("https://th.bing.com/th/id/OIP.jMaLxiLFcTtEtQf8v0ry0QHaEK?rs=1&pid=ImgDetMain");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.choose-competition h1{
+    flex:1;
+    text-align: center;
+    margin:0;
+}
+
+/*Button to go back*/
+.back-button {
+    text-decoration: none;
+    color: forestgreen;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.container-competitions{
+    margin-top: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.competition{
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 200px;
+    height: 250px;
+    padding: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.competition img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+
+
