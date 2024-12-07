@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method</title>
+    <style>
+        body {
+            background-image: url("https://th.bing.com/th/id/R.fec75e996d06e3dcd6480e69516cf0fe?rik=PPxtlPNJAQI2hA&pid=ImgRaw&r=0");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: green;
+        }
+        .payment-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .expiry-container {
+            display: flex;
+            justify-content: center;
+        }
+        .backbutton {
+            position: absolute;
+            color: white;
+            left: 20px;
+            top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="payment-container">
+    <h1>Add Payment Method</h1>
+    <form id="paymentForm">
+        <label for="cardholder_name">Cardholder Name:</label><br>
+        <input type="text" id="cardholder_name" name="cardholder_name" required><br><br>
+
+        <label for="card_number">Card Number:</label><br>
+        <input type="text" id="card_number" name="card_number" maxlength="16" required><br><br>
+
+        <div class="expiry-container">
+            <div>
+                <label for="expiry_month">Expiry Month:</label><br>
+                <select id="expiry_month" name="expiry_month" required>
+                    <option value="" disabled selected>Select Month</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select><br><br>
+            </div>
+            <div>
+                <label for="expiry_year">Expiry Year:</label><br>
+                <select id="expiry_year" name="expiry_year" required>
+                    <option value="" disabled selected>Select Year</option>
+                    <script>
+                        const currentYear = new Date().getFullYear();
+                        for (let i = 0; i < 20; i++) {
+                            const year = currentYear + i;
+                            const option = document.createElement('option');
+                            option.value = year;
+                            option.textContent = year;
+                            document.getElementById('expiry_year').appendChild(option);
+                        }
+                    </script>
+                </select><br><br>
+            </div>
+        </div>
+
+        <label for="CVV">Security Code (CVV):</label><br>
+        <input type="text" id="CVV" name="CVV" maxlength="4" required><br><br>
+
+        <button type="submit">Add your payment method</button>
+    </form>
+    <p id="message"></p>
+</div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const cardholder_name = document.getElementById('cardholder_name').value;
+        const card_number = document.getElementById('card_number').value;
+        const expiry_month = document.getElementById('expiry_month').value;
+        const expiry_year = document.getElementById('expiry_year').value;
+        const CVV = document.getElementById('CVV').value;
+        const message = document.getElementById('message');
+
+        const expiry_date = `${expiry_month}/${expiry_year.slice(-2)}`;
+
+        const luhnCheck = (num) => {
+            let sum = 0;
+            let shouldDouble = false;
+            for (let i = num.length - 1; i >= 0; i--) {
+                let digit = parseInt(num.charAt(i));
+                if (shouldDouble) {
+                    if ((digit *= 2) > 9) digit -= 9;
+                }
+                sum += digit;
+                shouldDouble = !shouldDouble;
+            }
+            return (sum % 10 === 0);
+        };
+
+        if (!luhnCheck(card_number)) {
+            message.textContent = 'Invalid card number.';
+            message.style.color = 'red';
+            return;
+        }
+
+        const cvvPattern = /^\d{3,4}$/;
+        if (!cvvPattern.test(CVV)) {
+            message.textContent = 'Invalid CVV. It should be 3 or 4 digits.';
+            message.style.color = 'red';
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch('http://127.0.0.1:5000/save-card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ cardholder_name, card_number, expiry_date, CVV })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                message.textContent = "Payment method saved successfully!";
+                message.style.color = 'green';
+            } else {
+                message.textContent = result.error;
+                message.style.color = 'red';
+            }
+        } catch (error) {
+            message.textContent = 'Error connecting to the server.';
+            message.style.color = 'red';
+        }
+    });
+</script>
+</body>
+</html>
+

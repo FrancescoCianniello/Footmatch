@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footmatch</title>
+    <link rel="stylesheet" href="/frontend/style.css">  <!--Linking to the CSS file-->
+</head>
+<body class="webapp">
+<img src="https://raw.githubusercontent.com/FrancescoCianniello/Footmatch/main/logo.png" alt="Webapp" class="img-webapp">  <!-- Application logo -->
+<!--Toolbar at the top.-->
+<div class="toolbar">
+    <!-- Icons on the left side -->
+    <div class="icons-sx">
+        <!--Adding the menu-->
+        <div class="menu">
+            <button class="menu-button">Menu</button>
+            <ul class="menu-dropdown">
+                <li><a href="account.html">My account</a></li>
+                <li><a href="mybookings.html">My bookings</a></li>
+                <li><a href="findcompetition.html">Competitions</a></li>
+                <li><a href="purchase.html">Purchase</a></li>
+                <li><a href="aboutus.html">About us</a></li>
+            </ul>
+        </div>
+        <a href="findcompetition.html">
+            <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_cerca.png?raw=true" alt="Find" class="icon">
+        </a>
+    </div>
+    <h1 id="welcomepage">Footmatch</h1>
+    <!-- Icons on the right side -->
+    <div class="icons-dx">
+        <a href="account.html">
+            <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_account.png?raw=true" alt="Account" class="icon">
+        </a>
+        <a href="purchase.html">
+            <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_carrello.png?raw=true" alt="Purchase" class="icon">
+        </a>
+        <a href="login.html" id="logout-webapp" class="logout-button">Logout</a>    <!-- Logout button that redirects to the login page -->
+    </div>
+</div>
+<!-- Main container-->
+<div class="container">
+    <h2>Available Matches</h2>
+    <div id="tickets-container"></div>    <!-- Container for tickets retrieved from the backend -->
+</div>
+<script>
+    // Fetch tickets from the backend
+    const token = localStorage.getItem('token');  //Retrieve the JWT token stored in the localStorage
+    if (token) {
+        fetch('http://127.0.0.1:5000/tickets', {   // If the token is present, send a GET request to get tickets
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(response => response.json())
+            .then(tickets => {
+                // Filtering and sorting tickets
+                const today = new Date();
+                const sortedTickets = tickets
+                    .filter(ticket => new Date(ticket.date) >= today) // Show only upcoming matches
+                    .sort((a, b) => new Date(a.date) - new Date(b.date)) // Sort by date
+                    .slice(0, 10); //  Limit the list to 10 tickets
+
+                // Update the ticket container
+                const ticketsContainer = document.getElementById('tickets-container');
+                sortedTickets.forEach(ticket => {
+                    const ticketElement = document.createElement('div');
+                    ticketElement.classList.add('container-competition');
+                    ticketElement.innerHTML = `
+                        <h3>${ticket.team1} vs ${ticket.team2}</h3>
+                         <p>Competition: ${ticket.competition}|Round:${ticket.round}</p>
+                        <p>Date: ${ticket.date} | ${ticket.city}, ${ticket.stadium}</p>
+                        <p>Tickets Available: ${ticket.available_tickets}| Price: ${ticket.price}</p>
+                    `;
+                    ticketsContainer.appendChild(ticketElement);  // Adds the ticket to the container
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching tickets:', error);  // Show an error if there is a problem with the request
+            });
+    } else {
+        alert('Please log in first');    //Notify the user to log in
+        window.location.href = 'login.html';
+    }
+
+</script>
+
+<script src="/frontend/script.js"></script>   <!-- Linking to an external script -->
+</body>
+</html>
