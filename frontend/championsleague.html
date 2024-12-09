@@ -2,9 +2,166 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Champions League Matches</title>
+  <link rel="stylesheet" href="/frontend/style.css">
+  <style>
+    .icon{
+      width: 50px;
+      height: 50px;
+      transition: filter 0.3s ease, transform 0.3s ease;
+      margin-right: 100px;
+    }
 
+    .icon-home{
+      width: 50px;
+      height: 50px;
+      transition: filter 0.3s ease, transform 0.3s ease;
+      margin-right: 30px;
+    }
+
+    #matches-title{
+      color: white;
+    }
+  </style>
+</head>
+<body class="champions-league">
+<header class="toolbar">
+  <h1>Champions League Matches</h1>
+</header>
+
+<div class="search-bar">
+  <a href="findcompetition.html" class="backbutton"> <--Back</a>
+  <label for="search-team"></label><select id="search-team">
+  <option value="">Select a team</option>
+</select>
+  <label for="search-date"></label><input type="date" id="search-date" placeholder="Search by date">
+  <label for="search-round"></label><select id="search-round">
+  <option value="">Select Round</option>
+</select>
+  <button id="search-button">Search</button>
+  <a href="purchase.html">
+    <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_carrello.png?raw=true" alt="Acquista" class="icon">
+  </a>
+  <a href="webapp.html">
+    <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon-home">
+  </a>
+</div>
+
+<div class="containers">
+  <h2 id="matches-title">Matches</h2>
+  <div id="matches-container"></div>
+</div>
+
+<script>
+  // Fetch Champions League matches from the backend
+  const token = localStorage.getItem('token');
+  if (token) {
+    fetch('http://127.0.0.1:5000/tickets', {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+            .then(response => response.json())
+            .then(tickets => {
+              const today = new Date();
+
+              // Filter Champions League matches in the future
+              const ChampionsLeagueMatches = tickets.filter(ticket =>
+                      ticket.competition === "Champions League" &&
+                      new Date(ticket.date) >= today
+              );
+
+              const italianTeams = [
+                "Inter", "Milan", "Juventus", "Atalanta", "Bologna"
+              ];
+
+              const uniqueTeams = new Set();
+              ChampionsLeagueMatches.forEach(ticket => {
+                if (italianTeams.includes(ticket.team1)) uniqueTeams.add(ticket.team1);
+                if (italianTeams.includes(ticket.team2)) uniqueTeams.add(ticket.team2);
+              });
+
+              const teamDropdown = document.getElementById('search-team');
+              uniqueTeams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team;
+                option.textContent = team;
+                teamDropdown.appendChild(option);
+              });
+
+
+
+              // Populate round dropdown (limit to 8 rounds)
+              const roundsDropdown = document.getElementById('search-round');
+              const uniqueRounds = [...new Set(ChampionsLeagueMatches.map(ticket => parseInt(ticket.round)))];
+              const sortedRounds = uniqueRounds.sort((a, b) => a - b);
+
+              sortedRounds.forEach(round => {
+                if (round >= 1 && round <= 8) { // Limita ai round validi
+                  const option = document.createElement('option');
+                  option.value = round;
+                  option.textContent = `Round ${round}`;
+                  roundsDropdown.appendChild(option);
+                }
+              });
+
+              // Display the first 10 matches by default
+              const sortedMatches = ChampionsLeagueMatches
+                      .sort((a, b) => new Date(a.date) - new Date(b.date))
+                      .slice(0, 10);
+
+              displayMatches(sortedMatches);
+
+              // Add search functionality
+              const searchButton = document.getElementById('search-button');
+              searchButton.addEventListener('click', () => {
+                const teamSearch = document.getElementById('search-team').value;
+                const dateSearch = document.getElementById('search-date').value;
+                const roundSearch = document.getElementById('search-round').value;
+
+                const filteredMatches = ChampionsLeagueMatches.filter(ticket => {
+                  const matchDate = ticket.date;
+                  const matchRound = parseInt(ticket.round);
+
+                  return (!teamSearch || ticket.team1 === teamSearch || ticket.team2 === teamSearch) &&
+                          (!dateSearch || matchDate.includes(dateSearch)) &&
+                          (!roundSearch || matchRound === parseInt(roundSearch));
+                });
+
+                displayMatches(filteredMatches);
+              });
+            })
+            .catch(error => {
+              console.error('Error fetching tickets:', error);
+            });
+  } else {
+    alert('Please log in first');
+    window.location.href = 'login.html';
+  }
+
+  // Function to display matches
+  function displayMatches(matches) {
+    const ticketsContainer = document.getElementById('matches-container');
+    ticketsContainer.innerHTML = '';
+
+    if (matches.length === 0) {
+      ticketsContainer.innerHTML = '<p>No matches found.</p>';
+      return;
+    }
+
+    matches.forEach(ticket => {
+      const ticketElement = document.createElement('div');
+      ticketElement.classList.add('container-competition');
+      ticketElement.innerHTML = `
+                <h3>${ticket.team1} vs ${ticket.team2}</h3>
+                <p>Competition: ${ticket.competition} | Round: ${ticket.round}</p>
+                <p>Date: ${ticket.date} | ${ticket.city}, ${ticket.stadium}</p>
+                <p>Tickets Available: ${ticket.available_tickets} | Price: €${ticket.price}</p>
+                <p>Sales end: ${ticket.sales_end_date}</p>
+            `;
+      ticketsContainer.appendChild(ticketElement);
+    });
+  }
+</script>
 </body>
 </html>

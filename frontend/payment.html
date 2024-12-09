@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Method</title>
+    <link rel="stylesheet" href="/frontend/style.css">
     <style>
         body {
             background-image: url("https://th.bing.com/th/id/R.fec75e996d06e3dcd6480e69516cf0fe?rik=PPxtlPNJAQI2hA&pid=ImgRaw&r=0");
@@ -12,6 +13,7 @@
             align-items: center;
             height: 100vh;
             color: green;
+            text-align: center;
         }
         .payment-container {
             background-color: white;
@@ -28,15 +30,30 @@
         }
         .backbutton {
             position: absolute;
-            color: white;
-            left: 20px;
-            top: 5px;
+            color: green;
+            left: 50px;
+            top: 10px;
+            font-size: 18px;
         }
+        .toolbar h1 {
+            text-align: center;
+            margin: 0;
+            flex-grow: 1;
+            font-size: 30px;
+            color: green;
+        }
+
     </style>
 </head>
 <body>
+<div class="toolbar">
+    <a href="purchase.html" class="backbutton"> <--Back</a>
+    <h1>Payment</h1>
+    <a href="webapp.html">
+        <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon-home">
+    </a>
+</div>
 <div class="payment-container">
-    <h1>Add Payment Method</h1>
     <form id="paymentForm">
         <label for="cardholder_name">Cardholder Name:</label><br>
         <input type="text" id="cardholder_name" name="cardholder_name" required><br><br>
@@ -84,76 +101,53 @@
         <label for="CVV">Security Code (CVV):</label><br>
         <input type="text" id="CVV" name="CVV" maxlength="4" required><br><br>
 
-        <button type="submit">Add your payment method</button>
+        <button id="confirm-payment">Confirm Payment</button>
     </form>
     <p id="message"></p>
 </div>
 
 <script>
-    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+    const params = new URLSearchParams(window.location.search);
+    const ticketId = params.get('ticketId');
+    const quantity = params.get('quantity');
+
+    document.getElementById('paymentForm').addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const cardholder_name = document.getElementById('cardholder_name').value;
-        const card_number = document.getElementById('card_number').value;
-        const expiry_month = document.getElementById('expiry_month').value;
-        const expiry_year = document.getElementById('expiry_year').value;
+        const cardholder = document.getElementById('cardholder_name').value;
+        const cardNumber = document.getElementById('card_number').value;
+        const expiryMonth = document.getElementById('expiry_month').value;
+        const expiryYear = document.getElementById('expiry_year').value;
         const CVV = document.getElementById('CVV').value;
-        const message = document.getElementById('message');
 
-        const expiry_date = `${expiry_month}/${expiry_year.slice(-2)}`;
-
-        const luhnCheck = (num) => {
-            let sum = 0;
-            let shouldDouble = false;
-            for (let i = num.length - 1; i >= 0; i--) {
-                let digit = parseInt(num.charAt(i));
-                if (shouldDouble) {
-                    if ((digit *= 2) > 9) digit -= 9;
+        fetch('http://127.0.0.1:5000/purchase', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                ticket_id: ticketId,
+                quantity: parseInt(quantity),
+                cardholder,
+                card_number: cardNumber,
+                expiry_month: expiryMonth,
+                expiry_year: expiryYear,
+                cvv: CVV
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    window.location.href = 'purchase.html';
+                } else {
+                    document.getElementById('message').textContent = data.error;
                 }
-                sum += digit;
-                shouldDouble = !shouldDouble;
-            }
-            return (sum % 10 === 0);
-        };
-
-        if (!luhnCheck(card_number)) {
-            message.textContent = 'Invalid card number.';
-            message.style.color = 'red';
-            return;
-        }
-
-        const cvvPattern = /^\d{3,4}$/;
-        if (!cvvPattern.test(CVV)) {
-            message.textContent = 'Invalid CVV. It should be 3 or 4 digits.';
-            message.style.color = 'red';
-            return;
-        }
-
-        try {
-            const token = localStorage.getItem('token');
-
-            const response = await fetch('http://127.0.0.1:5000/save-card', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ cardholder_name, card_number, expiry_date, CVV })
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                message.textContent = "Payment method saved successfully!";
-                message.style.color = 'green';
-            } else {
-                message.textContent = result.error;
-                message.style.color = 'red';
-            }
-        } catch (error) {
-            message.textContent = 'Error connecting to the server.';
-            message.style.color = 'red';
-        }
+            })
+            .catch(error => console.error('Error:', error));
     });
+
 </script>
 </body>
 </html>

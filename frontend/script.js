@@ -2,6 +2,10 @@
 document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
     e.preventDefault(); //Prevents form submission
 //Retrieve the data entered by the user
+    const name = document.getElementById('name').value;
+    const surname = document.getElementById('surname').value;
+    const fiscal_code = document.getElementById('fiscal_code').value;
+    const date_of_birth = document.getElementById('date_of_birth').value;
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const message = document.getElementById('message'); //Display of messages
@@ -10,8 +14,8 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
         //Send a POST request to the server for registration
         const response = await fetch('http://127.0.0.1:5000/register', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }) //Request in json format
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name, surname, fiscal_code, date_of_birth, username, password}) //Request in json format
         });
 
         const result = await response.json(); // JSON response parse
@@ -40,8 +44,8 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         //Send a POST request to the server for login
         const response = await fetch('http://127.0.0.1:5000/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }) //Request in json format
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password}) //Request in json format
         });
 
         const result = await response.json(); // JSON response parse
@@ -71,7 +75,7 @@ if (document.getElementById('welcomeMessage')) {
     } else {
         fetch('http://127.0.0.1:5000/protected', {
             method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` } //Include the token in the header
+            headers: {'Authorization': `Bearer ${token}`} //Include the token in the header
         })
             .then(response => response.json())
             .then(data => {

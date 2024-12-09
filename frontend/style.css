@@ -1,4 +1,3 @@
-/*Body style*/
 body{
     font-family:sans-serif;
     font-size: 20px;
@@ -14,47 +13,44 @@ body{
     align-items: center;
 }
 
-/*Main container*/
 .container {
-    display: inline-block;
+    display: inline-block; /* Cambiato da `contents` a `inline-block` per rendere il layout più robusto */
     text-align: center;
-    background-color: white;
+    background-color: white; /* Puoi aggiungere uno sfondo bianco al contenitore del form */
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px; /* Arrotonda i bordi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Aggiunge un'ombra */
     margin: auto;
     min-height:100px;
 }
 
-/*Moving logo*/
 .logo{
-    position: absolute;
-    top: 50%;
-    right: 80px;
-    transform: translateY(-50%);
-    width: 150px;
+    position: absolute; /* Posiziona l'immagine in modo assoluto rispetto al contenitore */
+    top: 50%; /* Posiziona verticalmente al centro */
+    right: 80px; /* Posiziona l'immagine a 50px fuori dalla destra del contenitore */
+    transform: translateY(-50%); /* Centra l'immagine verticalmente */
+    width: 150px;  /* Imposta la larghezza dell'immagine */
     height: auto;
-    animation: bounce 1s ease-in-out infinite;
+    animation: rimbalzo 1s ease-in-out infinite;
 }
-@keyframes bounce{
+@keyframes rimbalzo {
     0% {
-        transform: translateY(0); /*Initial position*/
+        transform: translateY(0); /* Posizione iniziale */
     }
     25% {
-        transform: translateY(-40px); /*Move upwards*/
+        transform: translateY(-40px); /* Spostamento verso l'alto */
     }
     50% {
-        transform: translateY(0); /*Back to the starting position*/
+        transform: translateY(0); /* Torna alla posizione iniziale */
     }
     75% {
-        transform: translateY(40px); /*Move downwards*/
+        transform: translateY(40px); /* Spostamento verso il basso */
     }
     100% {
-        transform: translateY(0); /*Back to the starting position*/
+        transform: translateY(0); /* Torna alla posizione iniziale */
     }
 }
 
-/*Main page background*/
 body.webapp{
     background-image: url("https://th.bing.com/th/id/OIP.jMaLxiLFcTtEtQf8v0ry0QHaEK?rs=1&pid=ImgDetMain");
     background-size: cover;
@@ -62,18 +58,16 @@ body.webapp{
     background-repeat: no-repeat;
 }
 
-/*Inserting the logo*/
 .img-webapp{
-        position: absolute;
-        top: 10px;
-        left: 50px;
-        width: 100px;
-        height: auto;
-        justify-content: center;
-        z-index: 10;
-    }
+    position: fixed; /* Posiziona l'immagine in modo assoluto */
+    left:400px;
+    top:2px;
+    width: 80px; /* Larghezza fissa per renderla un'icona */
+    height: auto; /* Mantiene le proporzioni dell'immagine */
+    justify-content: center;
+    z-index: 1001;
+}
 
-/*Creating the toolbar*/
 .toolbar{
     position: fixed;
     display: flex;
@@ -85,33 +79,34 @@ body.webapp{
     width: 100%;
     height:10%;
     top:0;
-   justify-content: space-between;
+    justify-content: space-between;
     align-items: center;
+    z-index: 1000;
 }
 
 h1{
     justify-content: center;
     align-items: center;
+    text-align: center;
     margin: 0;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: bold;
     color: black;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-/*Icon placement*/
 .icons-sx{
     display: flex;
     justify-content: center;
-    gap:30px;
-    margin-left:200px;
+    gap:50px;
+    margin-left:70px;
 }
 
 .icons-dx{
     display: flex;
     justify-content: center;
-    gap:30px;
-    margin-right:200px;
+    gap:50px;
+    margin-right:70px;
 }
 
 .icon{
@@ -125,7 +120,6 @@ h1{
     transform: scale(1.2);
 }
 
-/*Background for the choose-competition section*/
 body.choose-competition{
     margin:0;
     padding:0;
@@ -146,8 +140,8 @@ body.choose-competition{
     margin:0;
 }
 
-/*Button to go back*/
-.back-button {
+.backbutton {
+    display: inline-block;
     text-decoration: none;
     color: forestgreen;
     font-size: 18px;
@@ -155,7 +149,7 @@ body.choose-competition{
 }
 
 .container-competitions{
-    margin-top: 80px;
+    margin-top: 80px; /* Spazio sotto la toolbar */
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -180,5 +174,160 @@ body.choose-competition{
     margin-bottom: 15px;
 }
 
+/* Contenitore dei match */
+#tickets-container {
+    display: flex;
+    flex-direction: column; /* Disposizione verticale */
+    gap: 20px; /* Spaziatura tra i match */
+}
+
+.container-competition {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative; /* Per il posizionamento del pulsante */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.container-competitions:not(:last-child) {
+    border-bottom: 3px double #ccc; /* Linea doppia di separazione tra i match */
+}
 
 
+.logout-button{
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: green;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.menu-dropdown {
+    display: none; /* Nascondi il menu di default */
+    position: absolute;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 10px 0;
+    list-style: none;
+}
+
+.menu-dropdown li {
+    padding: 5px 15px;
+}
+
+.menu-dropdown li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.menu-dropdown li a:hover {
+    background-color: #f4f4f4;
+}
+
+.menu:hover .menu-dropdown {
+    display: block; /* Mostra il menu al passaggio del mouse */
+}
+
+.search-bar{
+    position: fixed;
+    display: flex;
+    padding: 10px 20px;
+    background-color: antiquewhite;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height:10%;
+    top:0;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.containers{
+    margin-top: 70px; /* Sposta il contenuto verso il basso */
+    padding: 15px; /* Padding interno */
+}
+
+#search-button{
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor:pointer;
+}
+
+#search-round, #search-team, #search-competition{
+    font-size:16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 100px;
+}
+
+#search-date{
+    font-size:16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 125px;
+}
+
+.icon-home{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    transition: filter 0.3s ease, transform 0.3s ease;
+    right: 30px;
+    top:15px;
+}
+
+/* Style for the menu items */
+.menu-dropdown li a {
+    font-weight: bold; /* Make the menu items bold */
+    text-decoration: none; /* Remove underlines, optional */
+    color: black; /* Optional: Set the color of the links */
+}
+
+/* Optional: Style for the hover effect */
+.menu-dropdown li a:hover {
+    color: black; /* Change the color on hover, optional */
+}

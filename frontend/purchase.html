@@ -140,7 +140,8 @@
         })
             .then(response => response.json())
             .then(data => {
-                tickets = data;
+                const currentDate=new Date();
+                tickets = data.filter(ticket => new Date(ticket.sales_end_date) >= currentDate);
                 renderTickets(tickets);
                 populateCompetitionDropdown();
                 updateRoundsDropdown("Serie A");
@@ -216,11 +217,15 @@
         const selectedTeam = document.getElementById('search-team').value;
         const selectedRound = document.getElementById('search-round').value;
 
+        const currentDate=new Date();
+
         const filteredTickets = tickets.filter(ticket => {
             const matchCompetition = !selectedCompetition || ticket.competition === selectedCompetition;
             const matchTeam = !selectedTeam || ticket.team1 === selectedTeam || ticket.team2 === selectedTeam;
             const matchRound = !selectedRound || ticket.round === parseInt(selectedRound);
-            return matchCompetition && matchTeam && matchRound;
+            const withinSalesDate = new Date(ticket.sales_end_date) >= currentDate;
+            const hasTicketsAvailable = ticket.available_tickets > 0;
+            return matchCompetition && matchTeam && matchRound && withinSalesDate && hasTicketsAvailable;
         });
 
         renderTickets(filteredTickets);
@@ -244,6 +249,7 @@
                     <h3>${ticket.team1} vs ${ticket.team2}</h3>
                     <p>Competition: ${ticket.competition} | Round: ${ticket.round}</p>
                     <p>Date: ${ticket.date} | Location: ${ticket.city}, ${ticket.stadium}</p>
+                    <p>Sales start: ${ticket.sales_start_date} |Sales end: ${ticket.sales_end_date}</p>
                     <p>Available: <span id="available_tickets-${ticket.available_tickets - ticket.quantity}">${ticket.available_tickets}</span>| Price per ticket: €${ticket.price}</p>
                     <p>Total Price: <span id="total-price-${ticket.id}">€${ticket.price}</span></p>
                     <select id="quantity-${ticket.id}" name="quantity">${quantityOptions}</select>

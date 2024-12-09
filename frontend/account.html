@@ -1,10 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account</title>
+  <link rel="stylesheet" href="/frontend/style.css">
+  <style>
+    /* Stili di base per il layout */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url("https://th.bing.com/th/id/R.fec75e996d06e3dcd6480e69516cf0fe?rik=PPxtlPNJAQI2hA&pid=ImgRaw&r=0");
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .account-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .account-container h1 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      color: #444;
+    }
+
+    .user-info p {
+      margin: 10px 0;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .logout {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #ff4d4d;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .logout:hover {
+      background-color: #ff1a1a;
+    }
+       /* Spostare il link a sinistra */
+     .backbuttons {
+       position: absolute;
+       left: 20px; /* Imposta la distanza dal lato sinistro */
+       top: 20px;  /* Distanza dal lato superiore della pagina */
+       text-decoration: none; /* Rimuove la sottolineatura */
+       color: white; /* Colore del testo */
+       font-size: 18px; /* Imposta la dimensione del font */
+     }
+
+     .icon-account{
+       position:absolute;
+       right:20px;
+       top:20px;
+     }
+  </style>
 </head>
 <body>
+<div class="account-container">
+  <a href="webapp.html" class="backbuttons"> <--Back</a>
+  <div class="icon-account">
+  <a href="webapp.html">
+    <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon">
+  </a>
+  </div>
+  <h1>My Account</h1>
+  <div id="user-info" class="user-info">
+  </div>
+  <a href="login.html" id="logout" class="logout">Logout</a> <!-- Aggiunto ID "logout" per la corretta gestione -->
+</div>
+<script>
+  // Recupera il token JWT salvato nel localStorage
+  const token = localStorage.getItem('token');
 
+  if (token) {
+    // Invia una richiesta al backend per recuperare i dati dell'utente
+    fetch('http://127.0.0.1:5000/account', {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error('Errore durante il recupero dei dati utente.');
+              }
+            })
+            .then(user => {
+              console.log('Dati dell\'utente ricevuti:', user);  // Aggiungi il log
+              const userInfoDiv = document.getElementById('user-info');
+              userInfoDiv.innerHTML = `
+    <p><strong>Name:</strong> ${user.name}</p>
+    <p><strong>Surname:</strong> ${user.surname}</p>
+    <p><strong>Fiscal Code:</strong> ${user.fiscal_code}</p>
+    <p><strong>Date of Birth:</strong> ${user.date_of_birth}</p>
+    <p><strong>Username:</strong> ${user.username}</p>
+  `;
+            })
+            .catch(error => {
+              console.error('Errore:', error);
+              alert('Si è verificato un errore. Effettua di nuovo l\'accesso.');
+              window.location.href = 'login.html';
+            });
+  } else {
+    alert('Non sei autenticato. Effettua il login.');
+    window.location.href = 'login.html';
+  }
+
+  // Logout: Rimuovi il token e reindirizza alla pagina di login
+  document.getElementById('logout').addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+  });
+</script>
 </body>
 </html>
