@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Champions League Matches</title>
-  <link rel="stylesheet" href="/frontend/style.css">
+  <link rel="stylesheet" href="/frontend/style.css">   <!-- Linking to CSS file -->
   <style>
     .icon{
       width: 50px;
@@ -31,46 +31,53 @@
 </header>
 
 <div class="search-bar">
-  <a href="findcompetition.html" class="backbutton"> <--Back</a>
-  <label for="search-team"></label><select id="search-team">
-  <option value="">Select a team</option>
+  <a href="findcompetition.html" class="backbutton"> <--Back</a>  <!-- Link to go back -->
+  <!-- Selection for a team search -->
+  <label for="search-team"></label><select id="search-team">  <!-- Selector to choose a team -->
+  <option value="">Select a team </option>   <!-- Default Option -->
 </select>
-  <label for="search-date"></label><input type="date" id="search-date" placeholder="Search by date">
-  <label for="search-round"></label><select id="search-round">
-  <option value="">Select Round</option>
+  <!-- Input for searching by date -->
+  <label for="search-date"></label><input type="date" id="search-date" placeholder="Search by date">  <!-- Field to select a date -->
+  <!-- Selection for round search -->
+  <label for="search-round"></label><select id="search-round"> <!-- Selector to choose a round -->
+  <option value="">Select Round</option>   <!-- Default Option -->
 </select>
+  <!-- Button to start the search -->
   <button id="search-button">Search</button>
+  <!-- Link to cart -->
   <a href="purchase.html">
-    <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_carrello.png?raw=true" alt="Acquista" class="icon">
+    <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_carrello.png?raw=true" alt="Purchase" class="icon">
   </a>
+  <!-- Link to homepage -->
   <a href="webapp.html">
     <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon-home">
   </a>
 </div>
 
+<!-- Match Container -->
 <div class="containers">
   <h2 id="matches-title">Matches</h2>
-  <div id="matches-container"></div>
+  <div id="matches-container"></div>  <!-- Dynamic container to display matches -->
 </div>
 
 <script>
-  // Fetch Champions League matches from the backend
+  // Retrieve JWT token from localStorage
   const token = localStorage.getItem('token');
-  if (token) {
+  if (token) {                   // If the token is present, it makes the request for tickets
     fetch('http://127.0.0.1:5000/tickets', {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${token}` }
     })
-            .then(response => response.json())
+            .then(response => response.json())  // Converts the JSON response
             .then(tickets => {
               const today = new Date();
 
               // Filter Champions League matches in the future
               const ChampionsLeagueMatches = tickets.filter(ticket =>
-                      ticket.competition === "Champions League" &&
-                      new Date(ticket.date) >= today
+                      ticket.competition === "Champions League" &&   //Check that the competition is Champions League
+                      new Date(ticket.date) >= today  //Filter only future matches
               );
-
+//List of Italian teams involved in the Champions League
               const italianTeams = [
                 "Inter", "Milan", "Juventus", "Atalanta", "Bologna"
               ];
@@ -80,13 +87,13 @@
                 if (italianTeams.includes(ticket.team1)) uniqueTeams.add(ticket.team1);
                 if (italianTeams.includes(ticket.team2)) uniqueTeams.add(ticket.team2);
               });
-
+              // Populate the team picker
               const teamDropdown = document.getElementById('search-team');
               uniqueTeams.forEach(team => {
-                const option = document.createElement('option');
-                option.value = team;
+                const option = document.createElement('option');  // Create a new option
+                option.value = team;   //Set the option value
                 option.textContent = team;
-                teamDropdown.appendChild(option);
+                teamDropdown.appendChild(option);  //Add the option to dropdown
               });
 
 
@@ -94,38 +101,38 @@
               // Populate round dropdown (limit to 8 rounds)
               const roundsDropdown = document.getElementById('search-round');
               const uniqueRounds = [...new Set(ChampionsLeagueMatches.map(ticket => parseInt(ticket.round)))];
-              const sortedRounds = uniqueRounds.sort((a, b) => a - b);
+              const sortedRounds = uniqueRounds.sort((a, b) => a - b);  //Sort rounds
 
               sortedRounds.forEach(round => {
-                if (round >= 1 && round <= 8) { // Limita ai round validi
+                if (round >= 1 && round <= 8) { // Limit to valid rounds
                   const option = document.createElement('option');
                   option.value = round;
                   option.textContent = `Round ${round}`;
-                  roundsDropdown.appendChild(option);
+                  roundsDropdown.appendChild(option);   //Add the option to the round dropdown
                 }
               });
 
               // Display the first 10 matches by default
               const sortedMatches = ChampionsLeagueMatches
-                      .sort((a, b) => new Date(a.date) - new Date(b.date))
-                      .slice(0, 10);
+                      .sort((a, b) => new Date(a.date) - new Date(b.date))  //Sort matches by date
+                      .slice(0, 10);  //Limit to first 10 matches
 
               displayMatches(sortedMatches);
 
               // Add search functionality
               const searchButton = document.getElementById('search-button');
               searchButton.addEventListener('click', () => {
-                const teamSearch = document.getElementById('search-team').value;
-                const dateSearch = document.getElementById('search-date').value;
-                const roundSearch = document.getElementById('search-round').value;
-
+                const teamSearch = document.getElementById('search-team').value;  //Get the selected team
+                const dateSearch = document.getElementById('search-date').value;   //Get the selected date
+                const roundSearch = document.getElementById('search-round').value; //Get the selected round
+//Filter matches by search
                 const filteredMatches = ChampionsLeagueMatches.filter(ticket => {
                   const matchDate = ticket.date;
                   const matchRound = parseInt(ticket.round);
 
-                  return (!teamSearch || ticket.team1 === teamSearch || ticket.team2 === teamSearch) &&
-                          (!dateSearch || matchDate.includes(dateSearch)) &&
-                          (!roundSearch || matchRound === parseInt(roundSearch));
+                  return (!teamSearch || ticket.team1 === teamSearch || ticket.team2 === teamSearch) &&  //Filter by team
+                          (!dateSearch || matchDate.includes(dateSearch)) &&   //Filter by date
+                          (!roundSearch || matchRound === parseInt(roundSearch));   //Filter by round
                 });
 
                 displayMatches(filteredMatches);
@@ -136,19 +143,19 @@
             });
   } else {
     alert('Please log in first');
-    window.location.href = 'login.html';
+    window.location.href = 'login.html';   //Redirects to login page
   }
 
   // Function to display matches
   function displayMatches(matches) {
     const ticketsContainer = document.getElementById('matches-container');
-    ticketsContainer.innerHTML = '';
-
+    ticketsContainer.innerHTML = '';  // Empty the container before adding new matches
+// If there are no matches, show a message
     if (matches.length === 0) {
       ticketsContainer.innerHTML = '<p>No matches found.</p>';
       return;
     }
-
+//Add each match as an element
     matches.forEach(ticket => {
       const ticketElement = document.createElement('div');
       ticketElement.classList.add('container-competition');
@@ -159,7 +166,7 @@
                 <p>Tickets Available: ${ticket.available_tickets} | Price: €${ticket.price}</p>
                 <p>Sales end: ${ticket.sales_end_date}</p>
             `;
-      ticketsContainer.appendChild(ticketElement);
+      ticketsContainer.appendChild(ticketElement);   //Add match to container
     });
   }
 </script>
