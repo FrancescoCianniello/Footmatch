@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchase Tickets</title>
-    <link rel="stylesheet" href="/frontend/style.css">
+    <link rel="stylesheet" href="/frontend/style.css">  <!--CSS linking-->
     <style>
         body {
             background-color: #f0f0f0;
@@ -75,8 +75,8 @@
             width: 50px;
             height: 50px;
             transition: filter 0.3s ease, transform 0.3s ease;
-            right: 30px; /* Sposta l'icona vicino al bordo destro */
-            top: 15px;   /* Mantiene l'icona in alto */
+            right: 30px;
+            top: 15px;
             z-index: 1001;
         }
 
@@ -91,22 +91,25 @@
         <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon-home">
     </a>
 </header>
-
+<!-- Search bar for filters -->
 <div class="search-bar">
     <a href="findcompetition.html" class="backbutton"> <--Back</a>
+    <!-- Drop-down menu to select a competition -->
     <label for="search-competition"></label><select id="search-competition">
         <option value="">Select a competition</option>
     </select>
+    <!-- Dropdown menu to select a team -->
     <label for="search-team"></label><select id="search-team">
         <option value="">Select a team</option>
     </select>
-    <label for="search-date"></label><input type="date" id="search-date" placeholder="Search by date">
+    <label for="search-date"></label><input type="date" id="search-date" placeholder="Search by date">   <!-- Date Input -->
+    <!-- Drop-down menu to select the round -->
     <label for="search-round"></label><select id="search-round">
         <option value="">Select Round</option>
     </select>
-    <button id="search-button">Search</button>
+    <button id="search-button">Search</button>   <!-- Search button -->
 </div>
-
+<!-- Main Ticket Container -->
 <div class="containers">
     <h1>Purchase Tickets</h1>
     <div id="ticket-list"></div>
@@ -114,32 +117,33 @@
 </div>
 
 <script>
+    // Array of Italian teams
     const italianTeams = ["Atalanta", "Bologna", "Cagliari", "Como", "Empoli", "Fiorentina", "Genoa",
         "Hellas Verona", "Inter", "Juventus", "Lazio", "Lecce", "Milan", "Monza", "Napoli", "Parma",
         "Roma", "Torino", "Udinese", "Venezia"];
-
+// Teams for European competitions
     const championsTeams = ["Atalanta", "Bologna", "Inter", "Juventus", "Milan"];
     const europaTeams = ["Lazio", "Roma"];
     const conferenceTeams = ["Fiorentina"];
-
+// Number of rounds for each competition
     const competitionRounds = {
         "Serie A": 38,
         "Champions League": 8,
         "Europa League": 8,
         "Conference League": 8,
     };
-
+//  Gets the access token
     const token = localStorage.getItem('token');
     let tickets = [];
 
-    // Verifica token e carica i biglietti
+    //Check if the token exists and upload tickets
     if (token) {
         fetch('http://127.0.0.1:5000/tickets', {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(response => response.json())
-            .then(data => {
+            .then(data => {   // Filter tickets with valid sales dates
                 const currentDate=new Date();
                 tickets = data.filter(ticket => new Date(ticket.sales_end_date) >= currentDate);
                 renderTickets(tickets);
@@ -149,76 +153,78 @@
             })
             .catch(error => console.error('Error fetching tickets:', error));
     } else {
-        alert('Please log in first');
+        alert('Please log in first');   // Warn the users if they are not logged in
         window.location.href = 'login.html';
     }
 
-    // Popola il menu delle competizioni
+    //Populate the competition drop-down menu
     function populateCompetitionDropdown() {
         const competitions = ["Serie A", "Champions League", "Europa League", "Conference League"];
         const competitionDropdown = document.getElementById('search-competition');
+        //Adds each competition as a drop-down menu option
         competitions.forEach(competition => {
             const option = document.createElement('option');
             option.value = competition;
             option.textContent = competition;
             competitionDropdown.appendChild(option);
         });
-
+//Adds an event to detect changes in competition selection
         competitionDropdown.addEventListener('change', () => {
             const selectedCompetition = competitionDropdown.value;
+            //Update the drop-down menus of rounds and teams based on the selected competition
             updateRoundsDropdown(selectedCompetition);
             populateTeamDropdown(selectedCompetition);
-            filterAndRender();
+            filterAndRender();  //Filter and render tickets based on new parameters
         });
     }
 
-    // Popola il menu dei team
+    //Populate the drop-down menu of teams according to the selected competition
     function populateTeamDropdown(competition) {
         const teamDropdown = document.getElementById('search-team');
-        teamDropdown.innerHTML = '<option value="">All Teams</option>';
+        teamDropdown.innerHTML = '<option value="">All Teams</option>';  // Default option
 
         let teams = [];
-        switch (competition) {
+        switch (competition) {  //Determine which teams to show based on the selected competition
             case "Serie A": teams = italianTeams; break;
             case "Champions League": teams = championsTeams; break;
             case "Europa League": teams = europaTeams; break;
             case "Conference League": teams = conferenceTeams; break;
         }
-
+//Adds each team as an option in the drop-down menu
         teams.forEach(team => {
             const option = document.createElement('option');
             option.value = team;
             option.textContent = team;
             teamDropdown.appendChild(option);
         });
-
+//Adds an event to filter tickets when selecting a team
         teamDropdown.addEventListener('change', filterAndRender);
     }
 
-    // Aggiorna i round
+    //Update the round drop-down menu based on the selected competition
     function updateRoundsDropdown(competition) {
         const roundDropdown = document.getElementById('search-round');
-        roundDropdown.innerHTML = '<option value="">All Rounds</option>';
+        roundDropdown.innerHTML = '<option value="">All Rounds</option>';  //Default option
 
-        const totalRounds = competitionRounds[competition] || 0;
-        for (let i = 1; i <= totalRounds; i++) {
+        const totalRounds = competitionRounds[competition] || 0;  //Total number of rounds for the competition
+        for (let i = 1; i <= totalRounds; i++) {  //Adds numbered options for each round
             const option = document.createElement('option');
             option.value = i;
             option.textContent = `Round ${i}`;
             roundDropdown.appendChild(option);
         }
-
+//Adds an event to filter tickets when selecting a round
         roundDropdown.addEventListener('change', filterAndRender);
     }
 
-    // Filtra i biglietti
+    //Filter tickets based on selected details and render them on screen
     function filterAndRender() {
         const selectedCompetition = document.getElementById('search-competition').value;
         const selectedTeam = document.getElementById('search-team').value;
         const selectedRound = document.getElementById('search-round').value;
 
         const currentDate=new Date();
-
+// Filter tickets based on selected details
         const filteredTickets = tickets.filter(ticket => {
             const matchCompetition = !selectedCompetition || ticket.competition === selectedCompetition;
             const matchTeam = !selectedTeam || ticket.team1 === selectedTeam || ticket.team2 === selectedTeam;
@@ -231,20 +237,21 @@
         renderTickets(filteredTickets);
     }
 
-    // Mostra i biglietti
+    // View filtered tickets
     function renderTickets(filteredTickets) {
         const ticketList = document.getElementById('ticket-list');
         ticketList.innerHTML = '';
-
+//Create a "card" for each available ticket
         filteredTickets.forEach(ticket => {
             if (ticket.available_tickets > 0) {
                 const ticketCard = document.createElement('div');
                 ticketCard.classList.add('ticket-card');
-                // Genera l'opzione del menu a tendina della quantità
+                //Generate quantity options available for purchase
                 let quantityOptions = '';
                 for (let i = 1; i <= ticket.available_tickets; i++) {
                     quantityOptions += `<option value="${i}">${i}</option>`;
                 }
+                // HTML structure of the ticket
                 ticketCard.innerHTML = `
                     <h3>${ticket.team1} vs ${ticket.team2}</h3>
                     <p>Competition: ${ticket.competition} | Round: ${ticket.round}</p>
@@ -255,9 +262,9 @@
                     <select id="quantity-${ticket.id}" name="quantity">${quantityOptions}</select>
                     <button class="buy-ticket" data-id="${ticket.id}">Buy</button>
                 `;
-                ticketList.appendChild(ticketCard);
+                ticketList.appendChild(ticketCard);  //Add the "card" to the ticket list
 
-                // Aggiunge un listener per il menu a tendina della quantità
+                //Event listener to update the total price when you change the quantity
                 const quantityDropdown = document.getElementById(`quantity-${ticket.id}`);
                 const totalPriceElement = document.getElementById(`total-price-${ticket.id}`);
                 quantityDropdown.addEventListener('change', () => {
@@ -265,7 +272,7 @@
                     const totalPrice = selectedQuantity * ticket.price;
                     totalPriceElement.textContent = `€${totalPrice}`;
                 });
-                // Gestisce il click del pulsante "Buy"
+                //Event listener to manage the purchase of a ticket
                 ticketCard.querySelector('.buy-ticket').addEventListener('click', () => {
                     const selectedQuantity = document.getElementById(`quantity-${ticket.id}`).value;
                     const url = `payment.html?ticketId=${ticket.id}&quantity=${selectedQuantity}`;
