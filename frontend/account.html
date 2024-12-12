@@ -4,17 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Account</title>
-  <link rel="stylesheet" href="/frontend/style.css">
+  <link rel="stylesheet" href="/frontend/style.css">    <!-- Linking to CSS file -->
   <style>
-    /* Stili di base per il layout */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background-image: url("https://th.bing.com/th/id/R.fec75e996d06e3dcd6480e69516cf0fe?rik=PPxtlPNJAQI2hA&pid=ImgRaw&r=0");
-      display: flex;
+      display: flex;     /* Flexible layout to center the container */
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 100vh;     /* Full window height */
       color: #333;
     }
 
@@ -35,74 +34,75 @@
     }
 
     .user-info p {
-      margin: 10px 0;
+      margin: 10px 0;    /*Spacing between paragraphs*/
       font-size: 1.2rem;
-      line-height: 1.5;
+      line-height: 1.5;   /*Line spacing*/
     }
 
     .logout {
-      display: inline-block;
-      margin-top: 20px;
+      display: inline-block;     /* Inline block-level element */
+      margin-top: 20px;     /*Upper spacing*/
       background-color: #ff4d4d;
       color: white;
       padding: 10px 20px;
       border-radius: 5px;
-      text-decoration: none;
+      text-decoration: none;   /* Removes underline */
     }
 
     .logout:hover {
-      background-color: #ff1a1a;
+      background-color: #ff1a1a;   /* Change color on hover */
     }
-       /* Spostare il link a sinistra */
+
      .backbuttons {
        position: absolute;
-       left: 20px; /* Imposta la distanza dal lato sinistro */
-       top: 20px;  /* Distanza dal lato superiore della pagina */
-       text-decoration: none; /* Rimuove la sottolineatura */
-       color: white; /* Colore del testo */
-       font-size: 18px; /* Imposta la dimensione del font */
+       left: 20px; /* Set the distance from the left side */
+       top: 20px;  /* Distance from the top of the page */
+       text-decoration: none;
+       color: white;
+       font-size: 18px;
      }
 
      .icon-account{
        position:absolute;
-       right:20px;
+       right:20px;    /* Set the distance from the right side */
        top:20px;
      }
   </style>
 </head>
 <body>
 <div class="account-container">
-  <a href="webapp.html" class="backbuttons"> <--Back</a>
+  <a href="webapp.html" class="backbuttons"> <--Back</a>   <!--Button to go back -->
   <div class="icon-account">
   <a href="webapp.html">
-    <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon">
+    <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon">  <!-- Icon to return to the homepage -->
   </a>
   </div>
   <h1>My Account</h1>
+  <!-- Section to show user data -->
   <div id="user-info" class="user-info">
   </div>
-  <a href="login.html" id="logout" class="logout">Logout</a> <!-- Aggiunto ID "logout" per la corretta gestione -->
+  <a href="login.html" id="logout" class="logout">Logout</a>  <!-- Logout button -->
 </div>
 <script>
-  // Recupera il token JWT salvato nel localStorage
+  // Retrieve the JWT token saved in the localStorage
   const token = localStorage.getItem('token');
 
   if (token) {
-    // Invia una richiesta al backend per recuperare i dati dell'utente
+    // Send a request to the backend to get the user's data
     fetch('http://127.0.0.1:5000/account', {
       method: 'GET',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${token}` }    //Adds the token to the header
     })
             .then(response => {
               if (response.ok) {
-                return response.json();
+                return response.json();   //Converts the response to JSON
               } else {
-                throw new Error('Errore durante il recupero dei dati utente.');
+                throw new Error('Error retrieving user data');    //Error if the answer is not valid
               }
             })
             .then(user => {
-              console.log('Dati dell\'utente ricevuti:', user);  // Aggiungi il log
               const userInfoDiv = document.getElementById('user-info');
+              // Populate the section with user data
               userInfoDiv.innerHTML = `
     <p><strong>Name:</strong> ${user.name}</p>
     <p><strong>Surname:</strong> ${user.surname}</p>
@@ -112,19 +112,20 @@
   `;
             })
             .catch(error => {
-              console.error('Errore:', error);
-              alert('Si è verificato un errore. Effettua di nuovo l\'accesso.');
-              window.location.href = 'login.html';
+              console.error('Error:', error);
+              alert('An error has occurred. Sign in again');
+              window.location.href = 'login.html';   //Redirect to log in
             });
+    //If the token is not present, redirect to log in
   } else {
-    alert('Non sei autenticato. Effettua il login.');
+    alert('You are not authenticated. Log in');
     window.location.href = 'login.html';
   }
 
-  // Logout: Rimuovi il token e reindirizza alla pagina di login
+  // Logout management: removes the token and redirects to log in
   document.getElementById('logout').addEventListener('click', () => {
-    localStorage.removeItem('token');
-    window.location.href = 'login.html';
+    localStorage.removeItem('token');    //Removes the token from localStorage
+    window.location.href = 'login.html';   //Redirect to log in
   });
 </script>
 </body>
