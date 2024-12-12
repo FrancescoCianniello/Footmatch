@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Method</title>
-    <link rel="stylesheet" href="/frontend/style.css">
+    <link rel="stylesheet" href="/frontend/style.css">  <!--CSS linking-->
     <style>
         body {
             background-image: url("https://th.bing.com/th/id/R.fec75e996d06e3dcd6480e69516cf0fe?rik=PPxtlPNJAQI2hA&pid=ImgRaw&r=0");
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100vh;   /* View height */
             color: green;
             text-align: center;
         }
@@ -38,7 +38,7 @@
         .toolbar h1 {
             text-align: center;
             margin: 0;
-            flex-grow: 1;
+            flex-grow: 1;  /* Takes up available space */
             font-size: 30px;
             color: green;
         }
@@ -49,24 +49,25 @@
 <div class="toolbar">
     <a href="purchase.html" class="backbutton"> <--Back</a>
     <h1>Payment</h1>
-    <a href="webapp.html">
+    <a href="webapp.html">   <!-- Homepage link -->
         <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon-home">
     </a>
 </div>
-<div class="payment-container">
+<div class="payment-container">   <!-- Container for payment form -->
     <form id="paymentForm">
+        <!-- Cardholder name field -->
         <label for="cardholder_name">Cardholder Name:</label><br>
         <input type="text" id="cardholder_name" name="cardholder_name" required><br><br>
-
+        <!-- Field for the card number -->
         <label for="card_number">Card Number:</label><br>
         <input type="text" id="card_number" name="card_number" maxlength="16" required><br><br>
-
+        <!-- Container for expiration details -->
         <div class="expiry-container">
             <div>
                 <label for="expiry_month">Expiry Month:</label><br>
-                <select id="expiry_month" name="expiry_month" required>
+                <select id="expiry_month" name="expiry_month" required>   <!-- Selecting the expiration month -->
                     <option value="" disabled selected>Select Month</option>
-                    <option value="01">01</option>
+                    <option value="01">01</option>  <!-- Month options -->
                     <option value="02">02</option>
                     <option value="03">03</option>
                     <option value="04">04</option>
@@ -81,9 +82,10 @@
                 </select><br><br>
             </div>
             <div>
-                <label for="expiry_year">Expiry Year:</label><br>
+                <label for="expiry_year">Expiry Year:</label><br>   <!-- Expiration year selection -->
                 <select id="expiry_year" name="expiry_year" required>
                     <option value="" disabled selected>Select Year</option>
+                    <!-- Years are dynamically generated -->
                     <script>
                         const currentYear = new Date().getFullYear();
                         for (let i = 0; i < 20; i++) {
@@ -97,20 +99,21 @@
                 </select><br><br>
             </div>
         </div>
-
+        <!-- Security code field -->
         <label for="CVV">Security Code (CVV):</label><br>
         <input type="text" id="CVV" name="CVV" maxlength="4" required><br><br>
-
+        <!-- Button to confirm the payment-->
         <button id="confirm-payment">Confirm Payment</button>
     </form>
-    <p id="message"></p>
+    <p id="message"></p>   <!-- Feedback Message -->
 </div>
 
 <script>
+    //Extracts the parameters of the query string
     const params = new URLSearchParams(window.location.search);
     const ticketId = params.get('ticketId');
     const quantity = params.get('quantity');
-
+// Prevents the default behavior of the form
     document.getElementById('paymentForm').addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -139,10 +142,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
-                    alert(data.message);
+                    alert(data.message);  //Show a success message
                     window.location.href = 'purchase.html';
                 } else {
-                    document.getElementById('message').textContent = data.error;
+                    document.getElementById('message').textContent = data.error;  //Show an error message
                 }
             })
             .catch(error => console.error('Error:', error));
