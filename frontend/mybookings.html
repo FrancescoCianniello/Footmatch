@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Bookings</title>
-  <link rel="stylesheet" href="/frontend/style.css">
+  <link rel="stylesheet" href="/frontend/style.css">   <!--CSS linking-->
   <style>
     body {
       background-color: #f4f4f9;
       color: green;
       font-family: Arial, sans-serif;
-      padding-top: 60px;
+      padding-top: 60px;    /* Space above the main content */
     }
     .toolbar {
-      position: fixed;
-      display: flex;
+      position: fixed;   /* Fixed position at the top of the page */
+      display: flex;   /* Flexible layout to place elements */
       justify-content: space-between;
       align-items: center;
       padding: 20px;
     }
     .backbutton {
       color: green;
-      text-decoration: none;
+      text-decoration: none;  /* No underline */
     }
     .bookings-container {
       display: flex;
@@ -36,7 +36,7 @@
       margin-left: auto;
     }
     .booking-item {
-      margin-bottom: 20px;
+      margin-bottom: 20px;  /* Space between bookings */
       padding: 15px;
       border: 1px solid #ddd;
       border-radius: 10px;
@@ -55,7 +55,7 @@
 <div class="toolbar">
   <a href="webapp.html" class="backbutton"> <--Back</a>
   <h1>My Bookings</h1>
-  <a href="webapp.html">
+  <a href="webapp.html">    <!-- Link to the main page -->
     <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon-home">
   </a>
 </div>
@@ -73,20 +73,20 @@
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-            .then(response => response.json())
+            .then(response => response.json())  // Converts the response to JSON
             .then(bookings => {
-              const bookingsContainer = document.getElementById('bookingsContainer');
+              const bookingsContainer = document.getElementById('bookingsContainer');  //Select the container for bookings
               bookingsContainer.innerHTML = '';  // Clear loading text
-
+// Show a message if there are no bookings
               if (bookings.length === 0) {
                 bookingsContainer.innerHTML = '<p>You have no bookings yet.</p>';
                 return;
               }
-
+// Iteration on every booking received
               bookings.forEach(booking => {
                 const bookingItem = document.createElement('div');
-                bookingItem.classList.add('booking-item');
-
+                bookingItem.classList.add('booking-item');  // Apply CSS class for styling
+// Booking details
                 bookingItem.innerHTML = `
                     <h3>${booking.ticket_details.team1} vs ${booking.ticket_details.team2}</h3>
                     <p><strong>Stadium:</strong> ${booking.ticket_details.stadium}</p>
@@ -97,10 +97,10 @@
                     <p><strong>Purchased on:</strong> ${new Date(booking.purchase_date).toLocaleDateString()}</p>
                 `;
 
-                bookingsContainer.appendChild(bookingItem);
+                bookingsContainer.appendChild(bookingItem);  // Adds the created item to the container
               });
             })
-            .catch(error => {
+            .catch(error => {   //Handles any errors during recovery
               console.error('Error fetching bookings:', error);
               document.getElementById('bookingsContainer').innerHTML = '<p>There was an error loading your bookings.</p>';
             });
