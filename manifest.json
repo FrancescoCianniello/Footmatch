@@ -1,10 +1,26 @@
 {
   "name": "Footmatch_TechWeb",
-  "version": "1.0.0",
-  "description": "",
-  "main": "frontend/script.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "private": true
+  "short_name": "Footmatch",
+  "lang": "en-US",
+  "start_url": "register.html",
+  "display": "standalone",
+  "description": "Book and buy tickets for the best sporting events with Footmatch",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
 }
+
+
