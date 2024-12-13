@@ -2,54 +2,37 @@ body{
     font-family:sans-serif;
     font-size: 20px;
     background-image: url("https://believeperform.com/wp-content/uploads/2013/05/Fotolia_56534766_Subscription_Monthly_XXL.jpg");
-    background-size: cover;
+    background-size: cover;  /* Fit the image to the screen size */
     background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
+    background-repeat: no-repeat;  /* Prevents the image from being repeated */
+    min-height: 100vh;  /* Minimum window height */
     text-align: center;
     margin: 0;
-    display: flex;
+    display: flex;   /* Enable flexible layout */
     justify-content: center;
     align-items: center;
 }
 
 .container {
-    display: inline-block; /* Cambiato da `contents` a `inline-block` per rendere il layout più robusto */
+    display: inline-block;
     text-align: center;
-    background-color: white; /* Puoi aggiungere uno sfondo bianco al contenitore del form */
+    background-color: white;
     padding: 20px;
-    border-radius: 10px; /* Arrotonda i bordi */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Aggiunge un'ombra */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Shadow around container */
     margin: auto;
     min-height:100px;
 }
 
 .logo{
-    position: absolute; /* Posiziona l'immagine in modo assoluto rispetto al contenitore */
-    top: 50%; /* Posiziona verticalmente al centro */
-    right: 80px; /* Posiziona l'immagine a 50px fuori dalla destra del contenitore */
-    transform: translateY(-50%); /* Centra l'immagine verticalmente */
-    width: 150px;  /* Imposta la larghezza dell'immagine */
+    position: absolute;
+    top: 50%;
+    right: 80px;
+    transform: translateY(-50%); /* Center image vertically */
+    width: 150px;
     height: auto;
-    animation: rimbalzo 1s ease-in-out infinite;
 }
-@keyframes rimbalzo {
-    0% {
-        transform: translateY(0); /* Posizione iniziale */
-    }
-    25% {
-        transform: translateY(-40px); /* Spostamento verso l'alto */
-    }
-    50% {
-        transform: translateY(0); /* Torna alla posizione iniziale */
-    }
-    75% {
-        transform: translateY(40px); /* Spostamento verso il basso */
-    }
-    100% {
-        transform: translateY(0); /* Torna alla posizione iniziale */
-    }
-}
+
 
 body.webapp{
     background-image: url("https://th.bing.com/th/id/OIP.jMaLxiLFcTtEtQf8v0ry0QHaEK?rs=1&pid=ImgDetMain");
@@ -59,17 +42,17 @@ body.webapp{
 }
 
 .img-webapp{
-    position: fixed; /* Posiziona l'immagine in modo assoluto */
+    position: fixed; /* Fixed positioning relative to the window */
     left:400px;
     top:2px;
-    width: 80px; /* Larghezza fissa per renderla un'icona */
-    height: auto; /* Mantiene le proporzioni dell'immagine */
+    width: 80px;
+    height: auto;
     justify-content: center;
-    z-index: 1001;
+    z-index: 1001;   /* Place on top of other elements */
 }
 
 .toolbar{
-    position: fixed;
+    position: fixed;  /* Bar placed at the top */
     display: flex;
     padding: 10px 20px;
     background-color: antiquewhite;
@@ -79,7 +62,7 @@ body.webapp{
     width: 100%;
     height:10%;
     top:0;
-    justify-content: space-between;
+    justify-content: space-between;  /* Spacing between elements */
     align-items: center;
     z-index: 1000;
 }
@@ -90,7 +73,7 @@ h1{
     text-align: center;
     margin: 0;
     font-size: 30px;
-    font-weight: bold;
+    font-weight: bold;   /*Boldface*/
     color: black;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
@@ -98,26 +81,26 @@ h1{
 .icons-sx{
     display: flex;
     justify-content: center;
-    gap:50px;
+    gap:50px;  /* Spacing between icons */
     margin-left:70px;
 }
 
 .icons-dx{
     display: flex;
     justify-content: center;
-    gap:50px;
+    gap:50px;  /* Spacing between icons */
     margin-right:70px;
 }
 
 .icon{
     width: 50px;
     height: 50px;
-    transition: filter 0.3s ease, transform 0.3s ease;
+    transition: filter 0.3s ease, transform 0.3s ease;  /* Animation for hover */
 }
 
 .icon:hover{
-    filter: brightness(2.0);
-    transform: scale(1.2);
+    filter: brightness(2.0);   /* Increase brightness on pass */
+    transform: scale(1.2);  /* Enlarges slightly */
 }
 
 body.choose-competition{
@@ -135,7 +118,7 @@ body.choose-competition{
 }
 
 .choose-competition h1{
-    flex:1;
+    flex:1;   /* Takes up space*/
     text-align: center;
     margin:0;
 }
@@ -149,9 +132,9 @@ body.choose-competition{
 }
 
 .container-competitions{
-    margin-top: 80px; /* Spazio sotto la toolbar */
+    margin-top: 80px;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap;   /* Allows items to go to a new line */
     gap: 20px;
     justify-content: center;
     padding: 20px;
@@ -171,45 +154,44 @@ body.choose-competition{
 .competition img {
     width: 120px;
     height: auto;
-    margin-bottom: 15px;
+    margin-bottom: 15px;  /* Distance between the image and the title */
 }
 
-/* Contenitore dei match */
 #tickets-container {
     display: flex;
-    flex-direction: column; /* Disposizione verticale */
-    gap: 20px; /* Spaziatura tra i match */
+    flex-direction: column; /* Vertical arrangement */
+    gap: 20px; /* Spacing between matches */
 }
 
 .container-competition {
     background-color: #f4f4f4;
-    padding: 20px;
+    padding: 20px;  /* Adds 20px interior space on all sides */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     gap: 10px;
-    position: relative; /* Per il posizionamento del pulsante */
+    position: relative;
     width: 100%;
-    box-sizing: border-box;
+    box-sizing: border-box;  /* Includes padding and border in total element size */
 }
 
 .container-competitions:not(:last-child) {
-    border-bottom: 3px double #ccc; /* Linea doppia di separazione tra i match */
+    border-bottom: 3px double #ccc; /* Double line separating matches */
 }
 
 
 .logout-button{
     display: inline-block;
-    padding: 10px 20px;
+    padding: 10px 20px;  /* Adds 10px vertically and 20px horizontally internal padding */
     font-size: 16px;
     color: white;
     background-color: green;
     text-align: center;
     text-decoration: none;
     border-radius: 5px;
-    border: none;
-    cursor: pointer;
+    border: none;   /* Removes the default border */
+    cursor: pointer;  /* Sets the cursor as hand to indicate that it is clickable */
 }
 
 .button:hover {
@@ -232,7 +214,7 @@ body.choose-competition{
 }
 
 .menu-dropdown {
-    display: none; /* Nascondi il menu di default */
+    display: none;
     position: absolute;
     background-color: white;
     min-width: 150px;
@@ -241,7 +223,7 @@ body.choose-competition{
     border-radius: 5px;
     margin-top: 5px;
     padding: 10px 0;
-    list-style: none;
+    list-style: none;  /* Removes bullets */
 }
 
 .menu-dropdown li {
@@ -249,9 +231,9 @@ body.choose-competition{
 }
 
 .menu-dropdown li a {
-    text-decoration: none;
+    text-decoration: none;  /* Removes underline */
     color: #333;
-    display: block;
+    display: block;  /* Makes the links take up the full width of the element */
 }
 
 .menu-dropdown li a:hover {
@@ -259,7 +241,7 @@ body.choose-competition{
 }
 
 .menu:hover .menu-dropdown {
-    display: block; /* Mostra il menu al passaggio del mouse */
+    display: block;
 }
 
 .search-bar{
@@ -279,8 +261,8 @@ body.choose-competition{
 }
 
 .containers{
-    margin-top: 70px; /* Sposta il contenuto verso il basso */
-    padding: 15px; /* Padding interno */
+    margin-top: 70px;
+    padding: 15px;
 }
 
 #search-button{
@@ -320,14 +302,12 @@ body.choose-competition{
     top:15px;
 }
 
-/* Style for the menu items */
 .menu-dropdown li a {
     font-weight: bold; /* Make the menu items bold */
-    text-decoration: none; /* Remove underlines, optional */
-    color: black; /* Optional: Set the color of the links */
+    text-decoration: none; /* Remove underlines*/
+    color: black;
 }
 
-/* Optional: Style for the hover effect */
 .menu-dropdown li a:hover {
-    color: black; /* Change the color on hover, optional */
+    color: black; /* Change the color on hover*/
 }
