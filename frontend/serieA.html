@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Serie A Matches</title>
-    <link rel="stylesheet" href="/frontend/style.css">
+    <link rel="stylesheet" href="/frontend/style.css">  <!--CSS linking-->
     <style>
         .icon{
             width: 50px;
             height: 50px;
-            transition: filter 0.3s ease, transform 0.3s ease;
+            transition: filter 0.3s ease, transform 0.3s ease;   /* Smooth transitions */
             margin-right: 100px;
         }
 
@@ -31,38 +31,38 @@
 </header>
 
 <div class="search-bar">
-    <a href="findcompetition.html" class="backbutton"> <--Back</a>
-    <label for="search-team"></label><select id="search-team">
-    <option value="">Select a team</option>
+    <a href="findcompetition.html" class="backbutton"> <--Back</a>   <!-- Link to go back -->
+    <label for="search-team"></label><select id="search-team">  <!-- Dropdown to select the team -->
+    <option value="">Select a team</option>   <!-- Blank default option -->
 </select>
-    <label for="search-date"></label><input type="date" id="search-date" placeholder="Search by date">
-    <label for="search-round"></label><select id="search-round">
-    <option value="">Select Round</option>
+    <label for="search-date"></label><input type="date" id="search-date" placeholder="Search by date">  <!-- Input to select the date -->
+    <label for="search-round"></label><select id="search-round">  <!-- Dropdown to select the round -->
+    <option value="">Select Round</option>   <!-- Blank default option -->
 </select>
-    <button id="search-button">Search</button>
-    <a href="purchase.html">
-        <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_carrello.png?raw=true" alt="Acquista" class="icon">
+    <button id="search-button">Search</button>  <!-- Button to start the search -->
+    <a href="purchase.html">  <!-- Link to the purchase page -->
+        <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_carrello.png?raw=true" alt="Purchase" class="icon">
     </a>
-    <a href="webapp.html">
+    <a href="webapp.html">   <!-- Link to the main page -->
         <img src="https://github.com/FrancescoCianniello/Footmatch/blob/main/Icona_Home.png?raw=true" alt="Home" class="icon-home">
     </a>
 </div>
 
 <div class="containers">
     <h2 id="matches-title">Matches</h2>
-    <div id="matches-container"></div>
+    <div id="matches-container"></div>   <!-- Container to show matches -->
 </div>
 <script>
     // Fetch Serie A matches from the backend
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');  // Retrieve JWT from local storage
     if (token) {
-        fetch('http://127.0.0.1:5000/tickets', {
+        fetch('http://127.0.0.1:5000/tickets', {   //Make a GET request to get tickets
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         })
-            .then(response => response.json())
+            .then(response => response.json())  //Converts the response to JSON
             .then(tickets => {
-                const today = new Date();
+                const today = new Date();  //Gets today's date
 
                 // Filter Serie A matches that are in the future
                 const serieAMatches = tickets.filter(ticket =>
@@ -70,7 +70,7 @@
                     new Date(ticket.date) >= today
                 );
 
-                // Populate team dropdown
+                //Populate the drop-down menu with unique teams
                 const uniqueTeams = new Set();
                 serieAMatches.forEach(ticket => {
                     uniqueTeams.add(ticket.team1);
@@ -78,51 +78,51 @@
                 });
 
                 const teamDropdown = document.getElementById('search-team');
-                uniqueTeams.forEach(team => {
+                uniqueTeams.forEach(team => {  //Adds an option for each team
                     const option = document.createElement('option');
                     option.value = team;
                     option.textContent = team;
-                    teamDropdown.appendChild(option);
+                    teamDropdown.appendChild(option);  //Adds option to dropdown
                 });
 
                 // Populate round dropdown (up to 38 rounds)
                 const roundsDropdown = document.getElementById('search-round');
-                const uniqueRounds = [...new Set(serieAMatches.map(ticket => parseInt(ticket.round)))];
-                const sortedRounds = uniqueRounds.sort((a, b) => a - b);
+                const uniqueRounds = [...new Set(serieAMatches.map(ticket => parseInt(ticket.round)))];  //Collects unique rounds
+                const sortedRounds = uniqueRounds.sort((a, b) => a - b);  //Sort rounds in ascending order
 
                 sortedRounds.forEach(round => {
-                    if (round >= 1 && round <= 38) {
+                    if (round >= 1 && round <= 38) {   //Verify that the round is valid
                         const option = document.createElement('option');
                         option.value = round;
                         option.textContent = `Round ${round}`;
-                        roundsDropdown.appendChild(option);
+                        roundsDropdown.appendChild(option);   // Adds option to dropdown
                     }
                 });
 
                 // Display the first 10 matches by default
                 const sortedMatches = serieAMatches
-                    .sort((a, b) => new Date(a.date) - new Date(b.date))
-                    .slice(0, 10);
+                    .sort((a, b) => new Date(a.date) - new Date(b.date))  //Sort matches by date
+                    .slice(0, 10);  //Limit to 10 matches
 
-                displayMatches(sortedMatches);
+                displayMatches(sortedMatches);  //Call the function to view matches
 
                 // Add search functionality
-                const searchButton = document.getElementById('search-button');
+                const searchButton = document.getElementById('search-button');  //Search button
                 searchButton.addEventListener('click', () => {
-                    const teamSearch = document.getElementById('search-team').value;
-                    const dateSearch = document.getElementById('search-date').value;
-                    const roundSearch = document.getElementById('search-round').value;
-
+                    const teamSearch = document.getElementById('search-team').value;  //Selected team
+                    const dateSearch = document.getElementById('search-date').value;  //Selected date
+                    const roundSearch = document.getElementById('search-round').value;  //Selected round
+//Filter matches based on search details
                     const filteredMatches = serieAMatches.filter(ticket => {
                         const matchDate = ticket.date;
                         const matchRound = parseInt(ticket.round);
 
-                        return (!teamSearch || ticket.team1 === teamSearch || ticket.team2 === teamSearch) &&
-                            (!dateSearch || matchDate.includes(dateSearch)) &&
-                            (!roundSearch || matchRound === parseInt(roundSearch));
+                        return (!teamSearch || ticket.team1 === teamSearch || ticket.team2 === teamSearch) && //Filter by team
+                            (!dateSearch || matchDate.includes(dateSearch)) &&  //Filter by date
+                            (!roundSearch || matchRound === parseInt(roundSearch));  //Filter by round
                     });
 
-                    displayMatches(filteredMatches);
+                    displayMatches(filteredMatches);  //Show filtered matches
                 });
             })
             .catch(error => {
@@ -130,20 +130,20 @@
             });
     } else {
         alert('Please log in first');
-        window.location.href = 'login.html';
+        window.location.href = 'login.html';  // Redirect to login page
     }
 
     // Function to display matches
     function displayMatches(matches) {
         const ticketsContainer = document.getElementById('matches-container');
-        ticketsContainer.innerHTML = '';
+        ticketsContainer.innerHTML = '';  //Empty the container
 
-        if (matches.length === 0) {
+        if (matches.length === 0) {  //If there are no matches
             ticketsContainer.innerHTML = '<p>No matches found.</p>';
             return;
         }
 
-        matches.forEach(ticket => {
+        matches.forEach(ticket => {   //For each match found
             const ticketElement = document.createElement('div');
             ticketElement.classList.add('container-competition');
             ticketElement.innerHTML = `
@@ -153,7 +153,7 @@
                 <p>Tickets Available: ${ticket.available_tickets} | Price: €${ticket.price}</p>
                 <p>Sales end: ${ticket.sales_end_date}</p>
             `;
-            ticketsContainer.appendChild(ticketElement);
+            ticketsContainer.appendChild(ticketElement);  // Adds the div to the container
         });
     }
 </script>
