@@ -98,3 +98,26 @@ function logout() {
     localStorage.removeItem('token');
     window.location.href = 'login.html'; //Redirect to log in
 }
+
+    $(document).ready(function () {
+        function bounce() {     //Defines the function that creates the bounce animation
+            $(".logo").animate({top: '45%'}, 500, 'easeInOutQuad') // Upward movement
+                .animate({top: '55%'}, 500, 'easeInOutQuad') //Downward movement
+                .animate({top: '50%'}, 500, 'easeInOutQuad', bounce); //Return and repetition
+        }
+
+        //Including jQuery to support custom easing
+        $.easing.easeInOutQuad = function (x, t, b, c, d) {
+            t /= d / 2;  //Divides the time spent by half of the total duration
+            if (t < 1) return c / 2 * t * t + b;   // If the time is in the first half, apply quadratic acceleration
+            t--;   //Otherwise, it decreases the time
+            return -c / 2 * (t * (t - 2) - 1) + b;   //Apply quadratic deceleration for the second half
+        };
+
+        //Start the animation if the logo exists
+        if ($(".logo").length) {
+            bounce();
+        }
+    });
+
+
