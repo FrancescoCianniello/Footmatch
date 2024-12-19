@@ -256,7 +256,7 @@
                     <h3>${ticket.team1} vs ${ticket.team2}</h3>
                     <p>Competition: ${ticket.competition} | Round: ${ticket.round}</p>
                     <p>Date: ${ticket.date} | Location: ${ticket.city}, ${ticket.stadium}</p>
-                    <p>Sales start: ${ticket.sales_start_date} |Sales end: ${ticket.sales_end_date}</p>
+                    <p>Sales end: ${ticket.sales_end_date}</p>
                     <p>Available: <span id="available_tickets-${ticket.available_tickets - ticket.quantity}">${ticket.available_tickets}</span>| Price per ticket: €${ticket.price}</p>
                     <p>Total Price: <span id="total-price-${ticket.id}">€${ticket.price}</span></p>
                     <select id="quantity-${ticket.id}" name="quantity">${quantityOptions}</select>
